@@ -1,4 +1,5 @@
 import {createUserRepository} from "./users";
+import {createBarsRepository} from "./bars";
 
 const admin = require('firebase-admin');
 const cert = require("../../secrets/alco-trip-firebase-adminsdk-ohaiv-9136820f5d.json");
@@ -11,5 +12,6 @@ export const app = admin.initializeApp({
 const database = app.database();
 
 export const db = {
-    users: createUserRepository(database)
+    users: createUserRepository(database),
+    bars: createBarsRepository(database)
 };
