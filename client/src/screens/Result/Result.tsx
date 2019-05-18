@@ -1,32 +1,31 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
-import { stringify } from "querystring";
 
 import { TripMap } from "../../components/TripMap/TripMap";
 
 import { useTrip } from "../../contexts/TripContext";
-import { ITrip } from "../../types/common";
+import {IGeoPosition, ITrip} from "../../types/common";
 
 import { useAsync } from "../../hooks/useAsync";
 import { useNodeSize } from "../../hooks/useNodeSize";
 import { useUserCoordinates } from "../../hooks/useUserCoordinates";
 
-import { parseSearch } from "../../lib/queryString";
+import {parseSearch, stringify} from "../../lib/queryString";
 
 import routes from "../../routes";
 
-function fetchTrip(params: {
+function fetchTrip(position: IGeoPosition, params: {
   barType: number | string;
   barsCount: number | string;
   drinkType: number | string;
 }): Promise<ITrip> {
-  return fetch(`/api/trips?${stringify(params)}`).then(x => x.json());
+  return fetch(`/api/trips?${stringify(position)}&${stringify(params)}`).then(x => x.json());
 }
 
 interface ResultProps extends RouteComponentProps {}
 
 export function Result(props: ResultProps) {
-  useUserCoordinates();
+  const currentPosition = useUserCoordinates();
   const contentRef = useRef<HTMLElement>(null);
   const [tripState, runFetch] = useAsync(fetchTrip);
   const [tryCount, setTryCount] = useState(0);
@@ -36,8 +35,10 @@ export function Result(props: ResultProps) {
     const { barType, barsCount, drinkType } = parseSearch(
       props.location.search
     );
-    runFetch({ barType, barsCount, drinkType });
-  }, [tryCount, props.location.search, runFetch]);
+    if(currentPosition) {
+      runFetch(currentPosition, {barType, barsCount, drinkType});
+    }
+  }, [tryCount, props.location.search, runFetch, Boolean(currentPosition)]);
 
   const contentSizes = useNodeSize(contentRef.current);
 
@@ -46,6 +47,10 @@ export function Result(props: ResultProps) {
     props.history.push(routes.navigation);
   }, [tripState.data, props.history, setTrip]);
 
+  const handleReload = useCallback(() => {
+    setTryCount(tryCount + 1);
+  }, [tryCount]);
+
   return (
     <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
       <nav>
@@ -53,6 +58,7 @@ export function Result(props: ResultProps) {
         <Link to={routes.resultList}>Списком</Link>
         <hr />
         <button onClick={handleSelect}>Выбрать</button>
+        <button onClick={handleReload}>Другой</button>
       </nav>
       <section ref={contentRef} style={{ flex: 1 }}>
         {tripState.loading && <div>Loading...</div>}

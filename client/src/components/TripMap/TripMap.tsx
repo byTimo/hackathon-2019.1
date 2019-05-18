@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { Map, withYMaps } from "react-yandex-maps";
 import { IBar } from "../../types/common";
 import { geoPositionToCoords } from "../../lib/geoPosition";
+import {useUserCoordinates} from "../../hooks/useUserCoordinates";
 
 interface TripMapProps {
   bars: IBar[];
@@ -17,26 +18,34 @@ export const TripMap: React.FC<TripMapProps> = withYMaps(
     const [loaded, setLoaded] = useState(false);
     const mapsRef = useRef<any>();
 
-    useEffect(() => {
-      const maps = mapsRef.current;
-      if (maps) {
-        const placemarks = bars.map(
-          x => new ymaps.Placemark(geoPositionToCoords(x.geoPosition))
-        );
-        placemarks.forEach(x => maps.geoObjects.add(x));
-        const bounds = maps.geoObjects.getBounds();
-        if (bounds) maps.setBounds(bounds);
-      }
-    }, [loaded, ymaps.Placemark, bars]);
+    // useEffect(() => {
+    //   const maps = mapsRef.current;
+    //   if (maps) {
+    //     const placemarks = bars.map(
+    //       x => new ymaps.Placemark(geoPositionToCoords(x.geoPosition), {
+    //           balloonContent: x.title
+    //       })
+    //     );
+    //     placemarks.forEach(x => maps.geoObjects.add(x));
+    //     const bounds = maps.geoObjects.getBounds();
+    //     if (bounds) maps.setBounds(bounds);
+    //   }
+    // }, [loaded, ymaps.Placemark, bars]);
 
     useEffect(() => {
       const maps = mapsRef.current;
       if (maps) {
-        ymaps
-          .route(bars.map(x => geoPositionToCoords(x.geoPosition)))
-          .then((route: any) => {
-            maps.geoObjects.add(route);
+          const route = new ymaps.multiRouter.MultiRoute({
+              referencePoints: bars.map(x => geoPositionToCoords(x.geoPosition)),
+              params: {
+                  //Тип маршрутизации - пешеходная маршрутизация.
+                  routingMode: 'pedestrian'
+              }
+          }, {
+              // Автоматически устанавливать границы карты так, чтобы маршрут был виден целиком.
+              boundsAutoApply: true
           });
+          maps.geoObjects.add(route);
       }
     }, [bars, ymaps, loaded]);
 
@@ -62,5 +71,5 @@ export const TripMap: React.FC<TripMapProps> = withYMaps(
     );
   },
   true,
-  ["route", "Placemark"]
+  ["route", "Placemark", "multiRouter.MultiRoute"]
 );

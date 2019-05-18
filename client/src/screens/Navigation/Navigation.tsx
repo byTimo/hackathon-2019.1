@@ -11,6 +11,7 @@ import { TripMap } from "../../components/TripMap/TripMap";
 import routes from "../../routes";
 
 import userIcon from "./user-icon.png";
+import {geoPositionToCoords} from "../../lib/geoPosition";
 
 interface NavigationProps {}
 
@@ -41,7 +42,7 @@ export function Navigation(props: NavigationProps) {
       <ZoomControl />
       <Placemark
         onLoad={resize}
-        geometry={coords}
+        geometry={geoPositionToCoords(coords)}
         options={{
           iconLayout: "default#image",
           iconImageHref: userIcon,
