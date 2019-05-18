@@ -1,16 +1,15 @@
 import { useState, useEffect } from "react";
 
-export function useNodeSize(node: HTMLElement) {
-  function getNodeSize() {
-    const { clientWidth: width, clientHeight: height } = node;
-    return { width, height };
-  }
+export function useNodeSize(node?: HTMLElement | null) {
+  const [size, setSize] = useState(getNodeSize(node));
 
-  const [size, setSize] = useState(getNodeSize);
+  useEffect(() => {
+    setSize(getNodeSize(node));
+  }, [node]);
 
   useEffect(() => {
     function setNodeSize() {
-      return setSize(getNodeSize());
+      return setSize(getNodeSize(node));
     }
     window.addEventListener("resize", setNodeSize);
     return () => {
@@ -19,4 +18,12 @@ export function useNodeSize(node: HTMLElement) {
   }, [node]);
 
   return size;
+}
+
+function getNodeSize(node?: HTMLElement | null) {
+  if (node) {
+    const { offsetWidth: width, offsetHeight: height } = node;
+    return { width, height };
+  }
+  return { width: 0, height: 0 };
 }
