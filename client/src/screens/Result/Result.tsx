@@ -2,16 +2,15 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { stringify } from "querystring";
 
-import { Map, Placemark } from "react-yandex-maps";
+import { TripMap } from "../../components/TripMap/TripMap";
 
 import { useTrip } from "../../contexts/TripContext";
-import { ITrip, IBar } from "../../types/common";
+import { ITrip } from "../../types/common";
 
 import { useAsync } from "../../hooks/useAsync";
 import { useNodeSize } from "../../hooks/useNodeSize";
 
 import { parseSearch } from "../../lib/queryString";
-import { geoPositionToCoords } from "../../lib/geoPosition";
 
 import routes from "../../routes";
 
@@ -55,7 +54,7 @@ export function Result(props: ResultProps) {
       <section ref={contentRef} style={{ flex: 1 }}>
         {tripState.loading && <div>Loading...</div>}
         {tripState.data && (
-          <ResultMap bars={tripState.data.bars} {...contentSizes} />
+          <TripMap bars={tripState.data.bars} {...contentSizes} />
         )}
         {tripState.error && (
           <div>
@@ -70,34 +69,5 @@ export function Result(props: ResultProps) {
         <button onClick={handleSelect}>Выбрать</button>
       </footer>
     </div>
-  );
-}
-
-interface ResultMapProps {
-  bars: IBar[];
-  width: number;
-  height: number;
-}
-
-function ResultMap({ bars, width, height }: ResultMapProps) {
-  if (bars.length === 0) {
-    return <div>Ничего не нашлось =(</div>;
-  }
-  return (
-    <Map
-      width={width}
-      height={height}
-      defaultState={{
-        center: [bars[0].geoPosition.latitude, bars[0].geoPosition.longitude],
-        zoom: 13
-      }}
-    >
-      {bars.map(bar => (
-        <Placemark
-          key={bar.id}
-          geometry={geoPositionToCoords(bar.geoPosition)}
-        />
-      ))}
-    </Map>
   );
 }

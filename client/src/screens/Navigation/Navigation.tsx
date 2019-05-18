@@ -1,13 +1,16 @@
 import React from "react";
-import { Map, Placemark, ZoomControl } from "react-yandex-maps";
+import { Placemark, ZoomControl } from "react-yandex-maps";
+import { Redirect } from "react-router";
+
 import { useUserCoordinates } from "../../hooks/useUserCoordinates";
 import { useWindowSize } from "../../hooks/useWindowSize";
 
-import userIcon from "./user-icon.png";
 import { useTrip } from "../../contexts/TripContext";
-import { Redirect } from "react-router";
+import { TripMap } from "../../components/TripMap/TripMap";
+
 import routes from "../../routes";
-import { geoPositionToCoords } from "../../lib/geoPosition";
+
+import userIcon from "./user-icon.png";
 
 interface NavigationProps {}
 
@@ -25,27 +28,16 @@ export function Navigation(props: NavigationProps) {
   }
 
   return (
-    <div>
-      <Map
-        defaultState={{
-          center: geoPositionToCoords(trip.bars[0].geoPosition),
-          zoom: 13
+    <TripMap {...size} bars={trip.bars}>
+      <ZoomControl />
+      <Placemark
+        geometry={coords}
+        options={{
+          iconLayout: "default#image",
+          iconImageHref: userIcon,
+          iconImageSize: [46, 46]
         }}
-        {...size}
-      >
-        <ZoomControl />
-        <Placemark
-          geometry={coords}
-          options={{
-            iconLayout: "default#image",
-            iconImageHref: userIcon,
-            iconImageSize: [46, 46]
-          }}
-        />
-        {trip.bars.map(x => (
-          <Placemark geometry={geoPositionToCoords(x.geoPosition)} key={x.id} />
-        ))}
-      </Map>
-    </div>
+      />
+    </TripMap>
   );
 }
