@@ -1,14 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { stringify } from "querystring";
 
-import { YMaps, Map, Placemark } from "react-yandex-maps";
+import { Map, Placemark } from "react-yandex-maps";
+
+import { useTrip } from "../../contexts/TripContext";
+import { ITrip, IBar } from "../../types/common";
+
+import { useAsync } from "../../hooks/useAsync";
+import { useNodeSize } from "../../hooks/useNodeSize";
+
+import { parseSearch } from "../../lib/queryString";
+import { geoPositionToCoords } from "../../lib/geoPosition";
 
 import routes from "../../routes";
-import { ITrip, IBar } from "../../types/common";
-import { useAsync } from "../../hooks/useAsync";
-import { parseSearch } from "../../lib/queryString";
-import { useNodeSize } from "../../hooks/useNodeSize";
 
 function fetchTrip(params: {
   barType: number | string;
@@ -24,6 +29,7 @@ export function Result(props: ResultProps) {
   const contentRef = useRef<HTMLElement>(null);
   const [tripState, runFetch] = useAsync(fetchTrip);
   const [tryCount, setTryCount] = useState(0);
+  const { setTrip } = useTrip();
 
   useEffect(() => {
     const { barType, barsCount, drinkType } = parseSearch(
@@ -33,6 +39,11 @@ export function Result(props: ResultProps) {
   }, [tryCount, props.location.search, runFetch]);
 
   const contentSizes = useNodeSize(contentRef.current);
+
+  const handleSelect = useCallback(() => {
+    if (tripState.data) setTrip(tripState.data);
+    props.history.push(routes.navigation);
+  }, [tripState.data]);
 
   return (
     <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
@@ -55,6 +66,9 @@ export function Result(props: ResultProps) {
           </div>
         )}
       </section>
+      <footer>
+        <button onClick={handleSelect}>Выбрать</button>
+      </footer>
     </div>
   );
 }
@@ -70,22 +84,20 @@ function ResultMap({ bars, width, height }: ResultMapProps) {
     return <div>Ничего не нашлось =(</div>;
   }
   return (
-    <YMaps>
-      <Map
-        width={width}
-        height={height}
-        defaultState={{
-          center: [bars[0].geoPosition.latitude, bars[0].geoPosition.longitude],
-          zoom: 13
-        }}
-      >
-        {bars.map(bar => (
-          <Placemark
-            key={bar.id}
-            geometry={[bar.geoPosition.latitude, bar.geoPosition.longitude]}
-          />
-        ))}
-      </Map>
-    </YMaps>
+    <Map
+      width={width}
+      height={height}
+      defaultState={{
+        center: [bars[0].geoPosition.latitude, bars[0].geoPosition.longitude],
+        zoom: 13
+      }}
+    >
+      {bars.map(bar => (
+        <Placemark
+          key={bar.id}
+          geometry={geoPositionToCoords(bar.geoPosition)}
+        />
+      ))}
+    </Map>
   );
 }
