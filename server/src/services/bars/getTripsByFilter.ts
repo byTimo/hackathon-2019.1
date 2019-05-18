@@ -39,6 +39,11 @@ const nouns = [
   "increase"
 ];
 
+const minLatitude = 56.823;
+const maxLatitude = 56.838;
+const minLongitude = 60.586;
+const maxLongitude = 60.627;
+
 function rnd<T>(xs: T[]) {
   return xs[Math.floor(Math.random() * xs.length)];
 }
@@ -62,8 +67,8 @@ function generateBar(): Bar {
     drinkType,
     title: generateBarName(),
     geoPosition: {
-      latitude: 0,
-      longitude: 0
+      latitude: Math.random() * (maxLatitude - minLatitude) + minLatitude,
+      longitude: Math.random() * (maxLongitude - minLongitude) + minLongitude
     }
   });
 }
