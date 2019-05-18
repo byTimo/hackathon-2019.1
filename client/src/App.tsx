@@ -10,21 +10,22 @@ import { Navigation } from "./screens/Navigation/Navigation";
 import { InBar } from "./screens/InBar/InBar";
 import { State } from "./screens/State/State";
 import { Finish } from "./screens/Finish/Finish";
+import routes from "./routes";
 
 export const App = () => {
     return (
         <Router>
             <Switch>
-                <Route exact path="/" component={Filter} />
-                <Route exact path="/settings" component={Settings} />
-                <Route exact path="/result/list" component={ResultList} />
-                <Route exact path="/result" component={Result} />
-                <Route exact path="/room" component={Room} />
-                <Route exact path="/navigation/list" component={NavigationList} />
-                <Route exact path="/navigation" component={Navigation} />
-                <Route exact path="/in-bar" component={InBar} />
-                <Route exact path="/state" component={State} />
-                <Route exact path="/finish" component={Finish} />
+                <Route exact path={routes.filter} component={Filter} />
+                <Route exact path={routes.settings} component={Settings} />
+                <Route exact path={routes.resultList} component={ResultList} />
+                <Route exact path={routes.result} component={Result} />
+                <Route exact path={routes.room} component={Room} />
+                <Route exact path={routes.navigationList} component={NavigationList} />
+                <Route exact path={routes.navigation} component={Navigation} />
+                <Route exact path={routes.inBar} component={InBar} />
+                <Route exact path={routes.state} component={State} />
+                <Route exact path={routes.finish} component={Finish} />
             </Switch>
         </Router>
     )
