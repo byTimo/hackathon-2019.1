@@ -5,9 +5,9 @@ import { useWindowSize } from "../../hooks/useWindowSize";
 
 import userIcon from "./user-icon.png";
 
-interface GeoNavigationScreenProps {}
+interface NavigationProps {}
 
-export function GeoNavigationScreen(props: GeoNavigationScreenProps) {
+export function Navigation(props: NavigationProps) {
   const coords = useUserCoordinates();
   const size = useWindowSize();
   if (!coords) {
