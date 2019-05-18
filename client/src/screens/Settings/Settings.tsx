@@ -46,6 +46,7 @@ export class Settings extends React.Component<SettingsProps> {
             <input
               id="weight"
               type="number"
+              min={0}
               value={weight}
               name="weight"
               onChange={this.handleChange}
@@ -56,6 +57,7 @@ export class Settings extends React.Component<SettingsProps> {
             <input
               id="height"
               type="number"
+              min={0}
               name="height"
               value={height}
               onChange={this.handleChange}
