@@ -21,8 +21,11 @@ export function createTripRepository(db: firestore.database.Database) {
     },
 
     readAll: async (): Promise<Trip[]> => {
-      const trips = await ref.once("value").then(x => x.val());
-      console.log(trips);
+      const tripsMap = await ref.once("value").then(x => x.val());
+      const trips = Object.keys(tripsMap).map(key => ({
+        ...tripsMap[key],
+        id: key
+      }));
       return trips;
     },
 
