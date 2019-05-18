@@ -49,7 +49,8 @@ export function Result(props: ResultProps) {
   return (
     <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
       <nav>
-        <a>На карте</a> &middot; <Link to={routes.resultList}>Списком</Link>
+        <span>На карте</span> &middot;{" "}
+        <Link to={routes.resultList}>Списком</Link>
         <hr />
         <button onClick={handleSelect}>Выбрать</button>
       </nav>
