@@ -1,33 +1,28 @@
-import { GeoPosition } from "./GeoPosition";
-import { Gender } from "./Gender";
+import {Gender} from "./Gender";
 
 export class User {
-  public id: string;
+    public id: string;
 
-  public name: string;
+    public name: string;
 
-  /** Вес в кг */
-  public weight: number;
+    /** Вес в кг */
+    public weight: number;
 
-  public gender: Gender;
+    public height: number;
 
-  public birthDate: Date;
+    public gender: Gender;
 
-  public geoPosition: GeoPosition;
-
-  public constructor({
-    id,
-    name,
-    weight,
-    gender,
-    birthDate,
-    geoPosition
-  }: User) {
-    this.id = id;
-    this.name = name;
-    this.weight = weight;
-    this.gender = gender;
-    this.birthDate = birthDate;
-    this.geoPosition = geoPosition;
-  }
+    public constructor({
+                           id,
+                           name,
+                           weight,
+                           height,
+                           gender,
+                       }: User) {
+        this.id = id;
+        this.name = name;
+        this.weight = weight;
+        this.height = height;
+        this.gender = gender;
+    }
 }

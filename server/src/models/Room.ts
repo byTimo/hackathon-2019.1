@@ -13,12 +13,12 @@ export class Room {
 
   public constructor(id: string, leaderUser: User) {
     this.id = id;
-    this.leaderId = leaderUser.id;
+    this.leaderId = leaderUser.id!;
     this.addUser(leaderUser);
   }
 
   public addUser(user: User) {
-    this.users.set(user.id, user);
+    this.users.set(user.id!, user);
     return this;
   }
 
