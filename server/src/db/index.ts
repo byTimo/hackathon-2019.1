@@ -1,29 +1,15 @@
-const admin = require('firebase-admin');
-const cert = require("./alco-trip-firebase-adminsdk-w1ptt-e056550f72.json");
+import {createUserRepository} from "./users";
 
-const app = admin.initializeApp({
+const admin = require('firebase-admin');
+const cert = require("../../secrets/alco-trip-firebase-adminsdk-ohaiv-9136820f5d.json");
+
+export const app = admin.initializeApp({
     credential: admin.credential.cert(cert),
-    databaseURL: "https://alco-trip.firebaseio.com"
+    databaseURL: "https://alco-trip.firebaseio.com/"
 });
 
-export async function test() {
-    let user = await app.auth().getUserByEmail("user@example.com");
+const database = app.database();
 
-    if (!user) {
-        user = await app.auth().createUser({
-            email: 'user@example.com',
-            emailVerified: false,
-            phoneNumber: '+11234567890',
-            password: 'secretPassword',
-            displayName: 'John Doe',
-            photoURL: 'http://www.example.com/12345678/photo.png',
-            disabled: false
-        })
-    }
-
-    return user;
-}
-
-export async function lol() {
-    app.firestore()
-}
+export const db = {
+    users: createUserRepository(database)
+};
