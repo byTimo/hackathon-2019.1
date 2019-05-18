@@ -7,7 +7,7 @@ export async function createUser(req: Request, res: Response) {
     const user = {
         name: body.name,
         gender: body.gender,
-        weight: body.weight,
+        weight: body.distanceWeight,
         height: body.height
     };
 

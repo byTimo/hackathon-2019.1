@@ -18,7 +18,7 @@ import routes from "./routes";
 export const App = () => {
   return (
     <TripProvider>
-      <YMaps>
+      <YMaps preload>
         <Router>
           <Switch>
             <Route exact path={routes.filter} component={Filter} />

@@ -5,7 +5,7 @@ import { DrinkType } from "./DrinkType";
 export class Bar {
   public id: string;
   public title: string;
-  public type: BarType;
+  public type?: BarType;
   public drinkType?: DrinkType;
   public geoPosition: GeoPosition;
 

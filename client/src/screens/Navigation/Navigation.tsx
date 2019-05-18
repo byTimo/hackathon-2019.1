@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Placemark, ZoomControl } from "react-yandex-maps";
 import { Redirect } from "react-router";
 
@@ -11,13 +11,23 @@ import { TripMap } from "../../components/TripMap/TripMap";
 import routes from "../../routes";
 
 import userIcon from "./user-icon.png";
+import {geoPositionToCoords} from "../../lib/geoPosition";
 
 interface NavigationProps {}
 
 export function Navigation(props: NavigationProps) {
+  const mapRef = useRef<any>(null);
   const coords = useUserCoordinates();
   const size = useWindowSize();
   const { trip } = useTrip();
+
+  function resize() {
+    const map = mapRef.current;
+    if (map) {
+      const bounds = map.geoObjects.getBounds();
+      if (bounds) map.setBounds(bounds);
+    }
+  }
 
   if (!coords) {
     return <>Loading...</>;
@@ -28,10 +38,11 @@ export function Navigation(props: NavigationProps) {
   }
 
   return (
-    <TripMap {...size} bars={trip.bars}>
+    <TripMap {...size} bars={trip.bars} mapRef={x => (mapRef.current = x)}>
       <ZoomControl />
       <Placemark
-        geometry={coords}
+        onLoad={resize}
+        geometry={geoPositionToCoords(coords)}
         options={{
           iconLayout: "default#image",
           iconImageHref: userIcon,
