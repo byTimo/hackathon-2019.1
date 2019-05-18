@@ -1,4 +1,5 @@
 import { User } from "./User";
+import { Trip } from "./Trip";
 
 export class Room {
   public id: string;
@@ -7,14 +8,17 @@ export class Room {
 
   public leaderId: string;
 
+  public trip: Trip;
+
   public get leader() {
     return this.users.get(this.leaderId);
   }
 
-  public constructor(id: string, leaderUser: User) {
+  public constructor(id: string, leaderUser: User, trip: Trip) {
     this.id = id;
     this.leaderId = leaderUser.id!;
     this.addUser(leaderUser);
+    this.trip = trip;
   }
 
   public addUser(user: User) {
