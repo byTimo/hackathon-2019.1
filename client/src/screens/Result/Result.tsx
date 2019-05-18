@@ -9,6 +9,7 @@ import { ITrip } from "../../types/common";
 
 import { useAsync } from "../../hooks/useAsync";
 import { useNodeSize } from "../../hooks/useNodeSize";
+import { useUserCoordinates } from "../../hooks/useUserCoordinates";
 
 import { parseSearch } from "../../lib/queryString";
 
@@ -25,6 +26,7 @@ function fetchTrip(params: {
 interface ResultProps extends RouteComponentProps {}
 
 export function Result(props: ResultProps) {
+  useUserCoordinates();
   const contentRef = useRef<HTMLElement>(null);
   const [tripState, runFetch] = useAsync(fetchTrip);
   const [tryCount, setTryCount] = useState(0);
@@ -42,14 +44,14 @@ export function Result(props: ResultProps) {
   const handleSelect = useCallback(() => {
     if (tripState.data) setTrip(tripState.data);
     props.history.push(routes.navigation);
-  }, [tripState.data]);
+  }, [tripState.data, props.history, setTrip]);
 
   return (
     <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
       <nav>
         <a>На карте</a> &middot; <Link to={routes.resultList}>Списком</Link>
         <hr />
-        <Link to={routes.room}>Дальше</Link>
+        <button onClick={handleSelect}>Выбрать</button>
       </nav>
       <section ref={contentRef} style={{ flex: 1 }}>
         {tripState.loading && <div>Loading...</div>}
@@ -65,9 +67,6 @@ export function Result(props: ResultProps) {
           </div>
         )}
       </section>
-      <footer>
-        <button onClick={handleSelect}>Выбрать</button>
-      </footer>
     </div>
   );
 }
