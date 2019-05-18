@@ -22,11 +22,11 @@ export class Room {
     return this;
   }
 
-  public removeUser(user: User) {
-    if (user.id === this.leaderId) {
+  public removeUser(id: string) {
+    if (id === this.leaderId) {
       throw new Error("Impossible to delete leader");
     }
-    this.users.delete(user.id);
+    this.users.delete(id);
     return this;
   }
 

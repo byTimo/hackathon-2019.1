@@ -1,3 +1,6 @@
+import { GeoPosition } from "./GeoPosition";
+import { Gender } from "./Gender";
+
 export class User {
   public id: string;
 
