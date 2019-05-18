@@ -1,9 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { YMaps } from "react-yandex-maps";
-
 import { TripProvider } from "./contexts/TripContext";
-
 import { Filter } from "./screens/Filter/Filter";
 import { Settings } from "./screens/Settings/Settings";
 import { ResultList } from "./screens/ResultList/ResultList";
