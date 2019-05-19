@@ -1,24 +1,24 @@
 import * as React from "react";
-import {Redirect, RouteComponentProps, withRouter} from "react-router";
-import {TripContextValue, withTrip} from "../../contexts/TripContext";
-import {Panel} from "../../components/Panel";
+import { Redirect, RouteComponentProps, withRouter } from "react-router";
+import { TripContextValue, withTrip } from "../../contexts/TripContext";
+import { Panel } from "../../components/Panel";
 import routes from "../../routes";
 import Gapped from "../../components/Gapped";
 import {Button, Typography} from "@material-ui/core";
 import {BarTable} from "../../components/BarTable";
 
 interface TripRouteParams {
-    barType: string;
-    barsCount: string;
+  barType: string;
+  barsCount: string;
 }
 
-export interface TripProps extends TripContextValue, RouteComponentProps<TripRouteParams> {
+export interface TripProps
+  extends TripContextValue,
+    RouteComponentProps<TripRouteParams> {}
 
-}
-
-class TripInternal extends React.Component<TripProps> {
+class TripInternal extends React.Component<TripProps>{
     render() {
-        if (!this.props.trip)
+        if(!this.props.trip)
             return <Redirect to={routes.map.filter}/>
 
         return (
@@ -29,6 +29,9 @@ class TripInternal extends React.Component<TripProps> {
                     <Gapped>
                         <Button onClick={() => this.props.history.push(routes.map.filter)}>
                             Изменить
+                        </Button>
+                        <Button onClick={() => this.props.history.push(routes.navigation)}>
+                            Погнали, народ
                         </Button>
                     </Gapped>
                 </Gapped>
