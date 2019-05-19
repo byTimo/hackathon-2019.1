@@ -65,6 +65,7 @@ export class UserContextProvider extends React.Component<{}, UserContextProvider
         const user = await response.json();
 
         LocalStorageManager.save("token", user);
+        this.setState({user, loading: false});
     }
 
     private handleLogout = () => {

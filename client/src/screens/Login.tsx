@@ -58,7 +58,7 @@ class LoginInternal extends React.Component<LoginProps, LoginState> {
 
     private handleLogin = async () => {
         await this.props.login(this.state.name, this.state.password);
-        this.props.history.replace("/");
+        this.props.history.replace(routes.map.root);
     }
 }
 
