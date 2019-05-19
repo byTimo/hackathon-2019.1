@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { Map, withYMaps } from "react-yandex-maps";
 import { IBar } from "../../types/common";
 import { geoPositionToCoords } from "../../lib/geoPosition";
-import {useUserCoordinates} from "../../hooks/useUserCoordinates";
+import "./TripMap.css";
 
 interface TripMapProps {
   bars: IBar[];
@@ -35,15 +35,21 @@ export const TripMap: React.FC<TripMapProps> = withYMaps(
     useEffect(() => {
       const maps = mapsRef.current;
       if (maps) {
+          // const balloonLayout = ymaps.templateLayoutFactory.createClass(
+          //     "<div class='balloonBody'>" +
+          //     "<h3>Название бара</h3>" +
+          //     "<div>Какая-то информация</div>" +
+          //     "<img class='balloonImage' src='https://partyinljubljana.com/images/programs/pub-crawl/bar-crawl-ljubljana.jpg'/>" +
+          //     "</div>"
+          // );
+
           const route = new ymaps.multiRouter.MultiRoute({
               referencePoints: bars.map(x => geoPositionToCoords(x.geoPosition)),
               params: {
-                  //Тип маршрутизации - пешеходная маршрутизация.
                   routingMode: 'pedestrian'
+
               }
           }, {
-              // Автоматически устанавливать границы карты так, чтобы маршрут был виден целиком.
-              boundsAutoApply: true
           });
           maps.geoObjects.add(route);
       }
@@ -71,5 +77,5 @@ export const TripMap: React.FC<TripMapProps> = withYMaps(
     );
   },
   true,
-  ["route", "Placemark", "multiRouter.MultiRoute"]
+  ["route", "Placemark", "multiRouter.MultiRoute", "ObjectManager", "templateLayoutFactory"]
 );
