@@ -1,0 +1,19 @@
+.alco-list {
+  margin-top: 50px;
+  margin-bottom: 50px;
+  padding-left: 0;
+  list-style: none;
+}
+
+.alco-list li {
+  margin-top: 25px;
+  text-align: center;
+}
+
+.go {
+  text-align: center;
+}
+
+.time {
+  margin-top: 50px !important;
+}
