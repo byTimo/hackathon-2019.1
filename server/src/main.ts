@@ -1,6 +1,5 @@
 import { server, wss } from "./server";
 import { setupWSS } from "./setupWS";
-import bodyParser from "body-parser";
 import express from "express";
 import {mainRouter} from "./router/mainRouter";
 import bodyParser from "body-parser";
@@ -8,6 +7,7 @@ import bodyParser from "body-parser";
 const app = express();
 
 setupWSS(wss);
+
 app.get("/ping", (_, res) => {
     res.send("pong");
 });
