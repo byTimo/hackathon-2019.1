@@ -5,6 +5,10 @@ import { GeoPosition } from "../models/GeoPosition";
 
 const state = new AppState();
 
+export function getAllRooms() {
+  return Array.from(state.rooms.values());
+}
+
 export function createRoom(leaderUser: User, trip: Trip) {
   return state.createRoom(leaderUser, trip);
 }

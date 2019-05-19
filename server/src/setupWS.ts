@@ -75,7 +75,7 @@ export function setupWSS(wss: WebSocket.Server) {
       db.users.read(userId),
       db.trips.read(tripId)
     ]);
-    const room = createRoom(user, trip);
+    const room = createRoom(user, trip).toJSON();
     broadcast(ws, JSON.stringify({ type: "rooms/created", room }));
   }
 

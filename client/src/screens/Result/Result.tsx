@@ -4,22 +4,27 @@ import { Link, RouteComponentProps } from "react-router-dom";
 import { TripMap } from "../../components/TripMap/TripMap";
 
 import { useTrip } from "../../contexts/TripContext";
-import {IGeoPosition, ITrip} from "../../types/common";
+import { IGeoPosition, ITrip } from "../../types/common";
 
 import { useAsync } from "../../hooks/useAsync";
 import { useNodeSize } from "../../hooks/useNodeSize";
 import { useUserCoordinates } from "../../hooks/useUserCoordinates";
 
-import {parseSearch, stringify} from "../../lib/queryString";
+import { parseSearch, stringify } from "../../lib/queryString";
 
 import routes from "../../routes";
 
-function fetchTrip(position: IGeoPosition, params: {
-  barType: number | string;
-  barsCount: number | string;
-  drinkType: number | string;
-}): Promise<ITrip> {
-  return fetch(`/api/trips?${stringify(position)}&${stringify(params)}`).then(x => x.json());
+function fetchTrip(
+  position: IGeoPosition,
+  params: {
+    barType: number | string;
+    barsCount: number | string;
+    drinkType: number | string;
+  }
+): Promise<ITrip> {
+  return fetch(`/api/trips?${stringify(position)}&${stringify(params)}`).then(
+    x => x.json()
+  );
 }
 
 interface ResultProps extends RouteComponentProps {}
@@ -35,15 +40,18 @@ export function Result(props: ResultProps) {
     const { barType, barsCount, drinkType } = parseSearch(
       props.location.search
     );
-    if(currentPosition) {
-      runFetch(currentPosition, {barType, barsCount, drinkType});
+    if (currentPosition) {
+      runFetch(currentPosition, { barType, barsCount, drinkType });
     }
   }, [tryCount, props.location.search, runFetch, Boolean(currentPosition)]);
 
   const contentSizes = useNodeSize(contentRef.current);
 
   const handleSelect = useCallback(() => {
-    if (tripState.data) setTrip(tripState.data);
+    if (!tripState.data) {
+      return;
+    }
+    setTrip(tripState.data);
     props.history.push(routes.navigation);
   }, [tripState.data, props.history, setTrip]);
 

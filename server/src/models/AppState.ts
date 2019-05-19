@@ -15,4 +15,10 @@ export class AppState {
   public closeRoom(id: string) {
     this.rooms.delete(id);
   }
+
+  public toJSON() {
+    return {
+      rooms: [...this.rooms.values()].map(x => x.toJSON())
+    };
+  }
 }

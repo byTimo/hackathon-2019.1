@@ -38,4 +38,13 @@ export class Room {
     users.forEach(user => this.addUser(user));
     return this;
   }
+
+  public toJSON() {
+    return {
+      id: this.id,
+      leaderId: this.leaderId,
+      trip: this.trip,
+      users: [...this.users.values()]
+    };
+  }
 }
