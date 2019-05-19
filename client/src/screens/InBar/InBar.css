@@ -1,0 +1,24 @@
+.alco-list {
+  margin-top: 50px;
+  margin-bottom: 50px;
+  padding-left: 0;
+  list-style: none;
+}
+
+.alco-list li {
+  margin-top: 25px;
+  text-align: center;
+}
+
+.go,
+.man {
+  text-align: center;
+}
+
+.man {
+  margin-top: 20px;
+}
+
+.time {
+  margin-top: 50px !important;
+}

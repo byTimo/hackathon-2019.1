@@ -1,0 +1,13 @@
+.back {
+  padding: 20px 5px;
+}
+
+.ovh {
+  overflow: hidden;
+  height: 200px;
+}
+.icon {
+  margin-top: 100px;
+  transform: scale(8);
+  text-align: center;
+}
