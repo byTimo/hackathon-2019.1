@@ -1,21 +1,114 @@
 import React from "react";
-import {Link} from "react-router-dom";
-import querystring from "querystring";
 import routes from "../../routes";
 import {RouteComponentProps} from "react-router";
+import {Button, MenuItem, Select, TextField} from "@material-ui/core";
+import {BarType, BeerType, VineType} from "../../types/common";
+import Gapped from "../../components/Gapped";
+import * as querystring from "querystring";
+import {Panel} from "../../components/Panel";
+import {stringify} from "../../lib/queryString";
+import {getCurrent} from "../../hooks/useUserCoordinates";
+import {TripContextValue, withTrip} from "../../contexts/TripContext";
 
-interface FilterProps extends RouteComponentProps {
+interface FilterProps extends RouteComponentProps, TripContextValue {
 }
 
-export class Filter extends React.Component<FilterProps> {
-    state = {
-        barType: "0",
-        beerType: "0",
-        vineType: "0",
-        barsCount: "3"
+interface FilterState {
+    barType: BarType;
+    beerType: BeerType;
+    vineType: VineType;
+    barsCount: number;
+}
+
+class FilterInternal extends React.Component<FilterProps, FilterState> {
+    state: FilterState = {
+        barType: BarType.BEER,
+        beerType: BeerType.STOUT,
+        vineType: VineType.RED,
+        barsCount: 3
     };
 
-    parseData = () => {
+    render() {
+        return (
+            <Panel>
+                <Gapped gap={15} vertical>
+                    <Select
+                        value={this.state.barType!}
+                        onChange={e => this.setState({barType: Number(e.target.value)})}
+                    >
+                        <MenuItem value={BarType.BEER}>
+                            Пиво
+                        </MenuItem>
+                        <MenuItem value={BarType.VINE}>
+                            Вино
+                        </MenuItem>
+                        <MenuItem value={BarType.STRONG}>
+                            Крепкие напитки
+                        </MenuItem>
+                    </Select>
+
+                    {this.renderDrinkType()}
+
+                    <TextField
+                        label="Количество баров"
+                        value={this.state.barsCount || ""}
+                        onChange={v => this.setState({barsCount: Number(v.target.value)})}
+                    />
+
+                    <Button onClick={this.handleClick}>Подобрать маршрут</Button>
+                </Gapped>
+            </Panel>
+        );
+    }
+
+    private renderDrinkType = () => {
+        switch (this.state.barType) {
+            case BarType.BEER:
+                return (
+                    <Select
+                        value={this.state.beerType!}
+                        onChange={e => this.setState({beerType: Number(e.target.value)})}
+                    >
+                        <MenuItem value={BeerType.STOUT}>
+                            Стаут
+                        </MenuItem>
+                        <MenuItem value={BeerType.LAGGER}>
+                            Лагер
+                        </MenuItem>
+                    </Select>
+                );
+            case BarType.VINE:
+                return (
+                    <Select
+                        value={this.state.vineType!}
+                        onChange={e => this.setState({vineType: Number(e.target.value)})}
+                    >
+                        <MenuItem value={VineType.RED}>
+                            Красное
+                        </MenuItem>
+                        <MenuItem value={VineType.WHITE}>
+                            Белое
+                        </MenuItem>
+                    </Select>
+                );
+            default:
+                return null;
+        }
+    }
+
+    private handleClick = async () => {
+        const position = getCurrent();
+        const params = querystring.stringify(this.parseData());
+        const response = await fetch(`/api/trips?${stringify(position)}&${params}`);
+        if(!response.ok){
+            throw new Error("Гавно какое-то")
+        }
+        const trip = await response.json();
+        this.props.setTrip(trip);
+        this.props.history.push(`${routes.map.trip}?${params}`);
+    }
+
+    private parseData = () => {
         const {barType, beerType, vineType, barsCount} = this.state;
 
         const obj = {
@@ -23,148 +116,22 @@ export class Filter extends React.Component<FilterProps> {
             barsCount
         };
 
-        if (barType === "0") {
-            return {
-                ...obj,
-                drinkType: beerType
-            };
+        switch (barType) {
+            case BarType.BEER:
+                return {
+                    ...obj,
+                    drinkType: beerType
+                };
+            case BarType.VINE:
+                return {
+                    ...obj,
+                    drinkType: vineType
+                };
+            case BarType.STRONG:
+                return obj;
+
         }
-
-        if (barType === "1") {
-            return {
-                ...obj,
-                drinkType: vineType
-            };
-        }
-
-        if (barType === "2") {
-            return {
-                ...obj,
-            }
-        }
-    };
-
-    handleSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
-        evt.preventDefault();
-        const params = querystring.stringify(this.parseData());
-        this.props.history.push(`${routes.result}?${params}`);
-    };
-
-    handleChange = (
-        evt: React.FormEvent<HTMLInputElement | HTMLSelectElement>
-    ) => {
-        this.setState({
-            [evt.currentTarget.name]: evt.currentTarget.value
-        });
-    };
-
-    render() {
-        const {barType, beerType, vineType, barsCount} = this.state;
-
-        return (
-            <div>
-                <Link to={routes.settings}>Настройки</Link>
-
-                <form onSubmit={this.handleSubmit}>
-                    <select
-                        value={barType}
-                        name="drinkType"
-                        onChange={this.handleChange}
-                    >
-                        <option value="0">Пиво</option>
-                        <option value="1">Вино</option>
-                        <option value="2">Крепкий алкоголь</option>
-                    </select>
-
-                    {barType === "0" && (
-                        <fieldset>
-                            <legend>Пиво</legend>
-
-                            <input
-                                type="radio"
-                                name="beerType"
-                                id="beerType0"
-                                value="0"
-                                onChange={this.handleChange}
-                                checked={beerType === "0"}
-                            />
-                            <label htmlFor="beerType0">Светлое</label>
-
-                            <input
-                                type="radio"
-                                name="beerType"
-                                id="beerType1"
-                                value="1"
-                                checked={beerType === "1"}
-                                onChange={this.handleChange}
-                            />
-                            <label htmlFor="beerType1">Тёмное</label>
-                        </fieldset>
-                    )}
-
-                    {barType === "1" && (
-                        <fieldset>
-                            <legend>Вино</legend>
-
-                            <input
-                                type="radio"
-                                name="vineType"
-                                id="vineType0"
-                                value="0"
-                                onChange={this.handleChange}
-                                checked={vineType === "0"}
-                            />
-                            <label htmlFor="vineType0">Белое</label>
-
-                            <input
-                                type="radio"
-                                name="vineType"
-                                id="vineType0"
-                                value="1"
-                                onChange={this.handleChange}
-                                checked={vineType === "1"}
-                            />
-                            <label htmlFor="vineType0">Красная</label>
-                        </fieldset>
-                    )}
-
-                    <fieldset>
-                        <legend>Количество баров</legend>
-
-                        <input
-                            type="radio"
-                            name="barsCount"
-                            id="barsCount3"
-                            value="3"
-                            onChange={this.handleChange}
-                            checked={barsCount === "3"}
-                        />
-                        <label htmlFor="barsCount3">3</label>
-
-                        <input
-                            type="radio"
-                            name="barsCount"
-                            id="barsCount5"
-                            value="5"
-                            onChange={this.handleChange}
-                            checked={barsCount === "5"}
-                        />
-                        <label htmlFor="barsCount5">5</label>
-
-                        <input
-                            type="radio"
-                            name="barsCount"
-                            id="barsCount8"
-                            value="8"
-                            onChange={this.handleChange}
-                            checked={barsCount === "8"}
-                        />
-                        <label htmlFor="barsCount8">8 баров</label>
-                    </fieldset>
-
-                    <button>Подобрать маршрут</button>
-                </form>
-            </div>
-        );
     }
 }
+
+export const Filter = withTrip(FilterInternal);

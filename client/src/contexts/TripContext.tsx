@@ -1,33 +1,40 @@
-import React, { useState, useContext } from "react";
+import React, {useState, useContext} from "react";
+import {ITrip} from "../types/common";
+import {Omit} from "../../../server/utils/Types";
 
-import { ITrip } from "../types/common";
+export interface TripContextValue {
+    trip: ITrip;
+    setTrip: (trip: ITrip) => void;
+}
 
-const TripContext = React.createContext<ITrip | null>(null);
+const TripContext = React.createContext<TripContextValue>({
+    trip: null as any,
+    setTrip: () => undefined
+});
 
-const SetTripContext = React.createContext<(trip: ITrip) => void>(() => {});
+export const TripProvider: React.FC = ({children}) => {
+    const [trip, setTrip] = useState<ITrip>(null as any);
 
-export const TripProvider: React.FC = ({ children }) => {
-  const [trip, setTrip] = useState<ITrip | null>(null);
-
-  return (
-    <TripContext.Provider value={trip}>
-      <SetTripContext.Provider value={setTrip}>
-        {children}
-      </SetTripContext.Provider>
-    </TripContext.Provider>
-  );
+    return (
+        <TripContext.Provider value={{trip, setTrip}}>
+            {children}
+        </TripContext.Provider>
+    );
 };
 
 interface TripConsumerProps {
-  children: (trip: ITrip | null) => React.ReactNode;
+    children: (trip: ITrip | null) => React.ReactNode;
 }
 
-export function TripConsumer(props: TripConsumerProps) {
-  return <TripContext.Consumer>{props.children}</TripContext.Consumer>;
-}
+export const withTrip = <TProps extends TripContextValue>(component: React.ComponentType<TProps>) => {
+    return React.forwardRef((props: Omit<TProps, keyof TripContextValue>, ref) => (
+        <TripContext.Consumer>
+            {value => React.createElement(component, {...props as any, ...value, ref})}
+        </TripContext.Consumer>
+    ));
+};
 
 export function useTrip() {
-  const setTrip = useContext(SetTripContext);
-  const trip = useContext(TripContext);
-  return { setTrip, trip };
+    const {trip, setTrip} = useContext(TripContext);
+    return {setTrip, trip};
 }

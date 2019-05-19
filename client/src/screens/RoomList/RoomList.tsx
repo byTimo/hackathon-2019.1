@@ -14,7 +14,7 @@ export function RoomsList() {
           <li key={room.id}>{room.trip.bars.map(x => x.title).join(" • ")}</li>
         ))}
         <li>
-          <NavLink to={routes.filter}>Создать комнату</NavLink>
+          <NavLink to={routes.map.filter}>Создать комнату</NavLink>
         </li>
       </ul>
     </section>

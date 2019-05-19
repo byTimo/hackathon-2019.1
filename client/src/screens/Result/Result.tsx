@@ -71,7 +71,10 @@ export function Result(props: ResultProps) {
       <section ref={contentRef} style={{ flex: 1 }}>
         {tripState.loading && <div>Loading...</div>}
         {tripState.data && (
-          <TripMap bars={tripState.data.bars} {...contentSizes} />
+          <TripMap
+              // bars={tripState.data.bars}
+              {...contentSizes}
+          />
         )}
         {tripState.error && (
           <div>

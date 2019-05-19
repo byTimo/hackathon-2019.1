@@ -1,6 +1,11 @@
 export default {
-  filter: "/",
-  settings: "/settings",
+  map: {
+    root: "/map",
+    filter: "/map/filter",
+    grand: "/map/grand",
+    settings: "/map/settings",
+    trip: "/map/trip"
+  },
   resultList: "/result/list",
   result: "/result",
   room: "/room",

@@ -4,7 +4,7 @@ import {UserInfo} from "../types/User";
 import {LocalStorageManager} from "../lib/LocalStorageManager";
 
 export interface UserContextValue {
-    user: any,
+    user: UserInfo | null,
     loading: boolean;
     login: (email: string, password: string) => Promise<void>;
     logout: () => void;
@@ -69,6 +69,7 @@ export class UserContextProvider extends React.Component<{}, UserContextProvider
 
     private handleLogout = () => {
         LocalStorageManager.remove("token");
+        this.setState({user: null});
     }
 
     private handleRegister = async (email: string, password: string, info: UserInfo) => {

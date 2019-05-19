@@ -1,5 +1,7 @@
 import * as React from "react";
 import {Gender, UserInfo} from "../types/User";
+import {InputAdornment, MenuItem, Select, TextField} from "@material-ui/core";
+import Gapped from "../components/Gapped";
 
 export interface UserInfoFormProps {
     info: UserInfo;
@@ -8,68 +10,50 @@ export interface UserInfoFormProps {
 
 export class UserInfoForm extends React.Component<UserInfoFormProps> {
     render() {
-        const { name, gender, weight, height } = this.props.info;
+        const {name, gender, weight, height} = this.props.info;
 
         return (
-            <div>
-                <form>
-                    <p>
-                        <label htmlFor="name">Имя</label>
-                        <input
-                            id="name"
-                            type="text"
-                            value={name}
-                            name="name"
-                            onChange={e => this.handleChange("name", e.target.value)}
-                        />
-                    </p>
-                    <p>
-                        <label htmlFor="weight">Масса</label>
-                        <input
-                            id="weight"
-                            type="number"
-                            min={0}
-                            value={weight}
-                            name="weight"
-                            onChange={e => this.handleChange("weight", Number(e.target.value))}
-                        />
-                    </p>
-                    <p>
-                        <label htmlFor="height">Рост</label>
-                        <input
-                            id="height"
-                            type="number"
-                            min={0}
-                            name="height"
-                            value={height}
-                            onChange={e => this.handleChange("height", Number(e.target.value))}
-                        />
-                    </p>
-                    <fieldset>
-                        <legend>Пол</legend>
-
-                        <input
-                            type="radio"
-                            name="sex"
-                            id="male"
-                            value="male"
-                            checked={gender === Gender.Male}
-                            onChange={() => this.handleChange("gender", Gender.Male)}
-                        />
-                        <label htmlFor="male">М</label>
-
-                        <input
-                            type="radio"
-                            name="sex"
-                            id="female"
-                            value="female"
-                            checked={gender === Gender.Female}
-                            onChange={() => this.handleChange("gender", Gender.Female)}
-                        />
-                        <label htmlFor="female">Ж</label>
-                    </fieldset>
-                </form>
-            </div>
+            <Gapped gap={10} vertical>
+                <TextField
+                    id="name"
+                    type="text"
+                    label="Имя"
+                    value={name}
+                    name="name"
+                    onChange={e => this.handleChange("name", e.target.value)}
+                />
+                <TextField
+                    label="Вес"
+                    type="number"
+                    value={weight}
+                    name="weight"
+                    onChange={e => this.handleChange("weight", Number(e.target.value))}
+                    InputProps={{
+                        startAdornment: <InputAdornment position="start">Кг</InputAdornment>,
+                    }}
+                />
+                <TextField
+                    label="Рост"
+                    type="number"
+                    name="height"
+                    value={height}
+                    onChange={e => this.handleChange("height", Number(e.target.value))}
+                    InputProps={{
+                        startAdornment: <InputAdornment position="start">Метр</InputAdornment>,
+                    }}
+                />
+                <Select
+                    value={gender}
+                    onChange={e => this.handleChange("gender", Number(e.target.value))}
+                >
+                    <MenuItem value={Gender.Male}>
+                        Мужской
+                    </MenuItem>
+                    <MenuItem value={Gender.Female}>
+                        Женский
+                    </MenuItem>
+                </Select>
+            </Gapped>
         );
     }
 

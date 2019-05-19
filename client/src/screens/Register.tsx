@@ -5,6 +5,10 @@ import {UserInfoForm} from "../contexts/UserInfoForm";
 import {RouteComponentProps} from "react-router";
 import routes from "../routes";
 import {Link} from "react-router-dom";
+import {HorizontalLayout} from "../components/HorizontalLayout";
+import {Content} from "../components/Content";
+import {Button, TextField} from "@material-ui/core";
+import Gapped from "../components/Gapped";
 
 export interface RegisterProps extends UserContextValue, RouteComponentProps {
 
@@ -30,18 +34,38 @@ class RegisterInternal extends React.Component<RegisterProps, RegisterState> {
 
     render() {
         return (
-            <div>
-                <input type="text" value={this.state.name} onChange={e => this.setState({name: e.target.value})}/>
-                <input
-                    type="password" value={this.state.password}
-                    onChange={e => this.setState({password: e.target.value})}
-                />
-                <UserInfoForm info={this.state.info} onChange={this.handleInfoChange}/>
-                <button onClick={this.handleRegister}>Зарегистироваться</button>
-                <Link to={routes.login}>
-                    Login
-                </Link>
-            </div>
+            <HorizontalLayout>
+                <Content justifyContent="center" alignItems="center">
+                    <Gapped vertical gap={10}>
+                        <TextField
+                            type="text"
+                            label="Email"
+                            value={this.state.name}
+                            onChange={e => this.setState({name: e.target.value})}
+                        />
+                        <TextField
+                            type="password"
+                            label="Пароль"
+                            value={this.state.password}
+                            onChange={e => this.setState({password: e.target.value})}
+                        />
+                        <UserInfoForm info={this.state.info} onChange={this.handleInfoChange}/>
+                        <Gapped gap={5}>
+                            <Button
+                                color="primary"
+                                onClick={this.handleRegister}
+                            >
+                                Зарегистироваться
+                            </Button>
+                            <Link to={routes.login}>
+                                <Button color="secondary">
+                                    Войти
+                                </Button>
+                            </Link>
+                        </Gapped>
+                    </Gapped>
+                </Content>
+            </HorizontalLayout>
         )
     }
 

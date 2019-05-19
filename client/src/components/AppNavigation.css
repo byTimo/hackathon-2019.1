@@ -1,0 +1,8 @@
+.NavigationGrow {
+    flex-grow: 1;
+}
+
+.NavigationMenuButton {
+    margin-left: -12px;
+    margin-right: 20px;
+}
