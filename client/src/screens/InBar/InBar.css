@@ -10,8 +10,13 @@
   text-align: center;
 }
 
-.go {
+.go,
+.man {
   text-align: center;
+}
+
+.man {
+  margin-top: 20px;
 }
 
 .time {
