@@ -9,4 +9,6 @@ export default {
     inBar: '/in-bar',
     state: '/state',
     finish: '/finish',
+    login: "/login",
+    register: "/register"
 };

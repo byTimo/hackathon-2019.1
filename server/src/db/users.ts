@@ -7,10 +7,10 @@ export function createUserRepository(db: firestore.database.Database) {
 
   return {
     create: async (
-      user: Pick<User, "name" | "weight" | "height" | "gender">
+      id: string, user: Pick<User, "name" | "weight" | "height" | "gender">
     ): Promise<string> => {
-      const data = await ref.push(user);
-      return data.key;
+      const data = await ref.child(id).set(user);
+      return id;
     },
 
     read: async (id: string): Promise<User> => {
