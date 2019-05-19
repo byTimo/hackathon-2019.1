@@ -9,5 +9,7 @@ export default {
   navigation: "/navigation",
   inBar: "/in-bar",
   state: "/state",
-  finish: "/finish"
+  finish: "/finish",
+  login: "/login",
+  register: "/register"
 };
