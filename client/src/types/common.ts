@@ -31,5 +31,7 @@ export interface IBar {
 
 export interface ITrip {
   id: string;
+  name?: string;
+  description: string;
   bars: IBar[];
 }

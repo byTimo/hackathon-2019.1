@@ -18,7 +18,7 @@ export function createBarsRepository(db: firestore.database.Database) {
                 ? rnd([BeerType.LAGGER, BeerType.STOUT])
                 : type === BarType.VINE
                 ? rnd([VineType.RED, VineType.WHITE])
-                : undefined;
+                : VineType.WHITE;
         return {
             id,
             title: bar.name,
@@ -32,14 +32,19 @@ export function createBarsRepository(db: firestore.database.Database) {
     };
 
     return {
-        select: async () => {
+        select: async (ids?: string[]) => {
             const a = await ref.once("value");
             const result: Bar[] = [];
             a.forEach(x => {
                 result.push(convert(x.key!, x.val()))
             });
 
-            return result;
+            if(!ids) {
+                return result;
+            }
+
+            const set = new Set(ids);
+            return result.filter(x => set.has(x.id))
         },
 
         read: async (id: string): Promise<Bar> => {

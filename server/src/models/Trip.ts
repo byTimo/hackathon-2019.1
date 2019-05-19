@@ -2,6 +2,7 @@ import { Bar } from "./Bar";
 
 export class Trip {
   public id: string;
+  public description?: string;
   public bars: Bar[];
 
   public constructor(id: string, bars: Bar[] = []) {

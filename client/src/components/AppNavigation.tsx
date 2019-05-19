@@ -106,7 +106,7 @@ class AppNavigationInternal extends React.Component<AppNavigationProps, AppNavig
 
     private handleGrandClick = () => {
         this.setState({menu: false});
-        //this.props.history.push()
+        this.props.history.push(routes.map.grand)
     }
 
     private handleSettingsClick = () => {

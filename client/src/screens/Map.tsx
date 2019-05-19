@@ -7,6 +7,7 @@ import {Filter} from "./Filter/Filter";
 import {Settings} from "./Settings/Settings";
 import {Trip} from "./Result/Trip";
 import {TripContextValue, withTrip} from "../contexts/TripContext";
+import {GrandTrips} from "./GrandTrips";
 
 export interface MapProp extends TripContextValue {
 
@@ -28,7 +29,7 @@ class MapInternal extends React.Component<MapProp> {
         return (
             <Switch>
                 <Route exact path={routes.map.filter} component={Filter}/>
-                <Route exact path={routes.map.grand} component={Filter}/>
+                <Route exact path={routes.map.grand} component={GrandTrips}/>
                 <Route exact path={routes.map.settings} component={Settings}/>
                 <Route exact path={routes.map.trip} component={Trip}/>
             </Switch>
